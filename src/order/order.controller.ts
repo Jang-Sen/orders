@@ -38,12 +38,16 @@ export class OrderController {
         })
         .toPromise();
 
+      // console.log('customer +++++++++++++++ ' + JSON.stringify(customer));
+
       book = await this.bookClient
         .send(GET_BOOK, {
           bookId,
         })
         .toPromise();
+      // console.log('book +++++++++++++++++++++++' + JSON.stringify(book));
     } catch (err) {
+      console.log(err);
       throw new ServiceUnavailableException(
         'service Unavailable, please try again later',
       );
@@ -67,7 +71,8 @@ export class OrderController {
     if (!isBookInStock) {
       throw new BadRequestException('not enough books in stock');
     }
+    const order = await this.orderService.createOrder(createOrderDto);
 
-    // const order = await this.orderService;
+    return order;
   }
 }
