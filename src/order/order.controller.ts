@@ -13,12 +13,14 @@ import { OrderService } from './order.service';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateOrderDto } from './dto/create-order.dto';
 import axios from 'axios';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 const GET_CUSTOMER = 'get_customer';
 const GET_BOOK = 'get_book';
 const IS_BOOK_IN_STOCK = 'is_book_in_stock';
 const DECREASE_STOCK = 'decrease_stock';
 
+@ApiTags('Order')
 @Controller('order')
 export class OrderController {
   constructor(
@@ -31,6 +33,7 @@ export class OrderController {
 
   // 등록
   @Post()
+  @ApiOperation({ summary: '주문 받기' })
   async createOrder(@Body() createOrderDto: CreateOrderDto) {
     const { bookId, customerId, quantity } = createOrderDto;
     let customer, book;
@@ -83,6 +86,7 @@ export class OrderController {
   }
 
   @Delete('/:id')
+  @ApiOperation({ summary: '주문 취소' })
   async deleteOrder(@Param('id') id: string): Promise<void> {
     const order = await this.orderService.getOrderById(id);
 
